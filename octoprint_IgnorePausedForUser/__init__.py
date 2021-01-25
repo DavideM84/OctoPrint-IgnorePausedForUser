@@ -3,24 +3,31 @@
 import octoprint.plugin
 import re
 
-class IgnorePausedForUser(octoprint.plugin.AssetPlugin,
+class IgnorePausedForUser(octoprint.plugin.StartupPlugin,
+						  octoprint.plugin.AssetPlugin,
 						  octoprint.plugin.TemplatePlugin,
                 		  octoprint.plugin.SettingsPlugin):
-				
-	def CheckPausedForUser(self, comm, line, *args, **kwargs):
+	
+	## checkPausedForUser		
+	def checkPausedForUser(self, comm, line, *args, **kwargs):
 		if "echo:busy: paused for user" in line:
-			if self._settings.enabled:
-				self._printer.commands("M103", tags=None, force=True)
-				self._plugin_manager.send_plugin_message(self._identifier, dict(type="popup", msg="Ignored 'Paused for User'"))
+			if self._settings.get(["enabled"]):
+				self._logger.info("Send M108 to skip 'paused for user'")
+				self._printer.commands("M108", force=True)
+				self._plugin_manager.send_plugin_message(self._identifier, dict(type="popup", msg="Sent M108 to resume after 'Paused for user'", hide=self._settings.get(["autoclose"])))
 		return line
 	
+	## on_after_startup
+	def on_after_startup(self):
+		self._logger.info("Enabled: '%s' Autoclose: '%s'" % self._settings.get(["enabled"]), self._settings.get(["autoclose"]))
+
 	##-- AssetPlugin hooks
 	def get_assets(self):
 		return dict(js=["js/IgnorePausedForUser.js"])
 		
 	##-- Settings hooks
 	def get_settings_defaults(self):
-		return dict(enabled=False)	
+		return dict(enabled=False, autoclose=True)	
 	
 	##-- Template hooks
 	def get_template_configs(self):
@@ -56,7 +63,7 @@ def __plugin_load__():
 
 	global __plugin_hooks__
 	__plugin_hooks__ = {
-		"octoprint.comm.protocol.gcode.received": __plugin_implementation__.CheckPausedForUser,
+		"octoprint.comm.protocol.gcode.received": __plugin_implementation__.checkPausedForUser,
 		"octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information
 	}
 
