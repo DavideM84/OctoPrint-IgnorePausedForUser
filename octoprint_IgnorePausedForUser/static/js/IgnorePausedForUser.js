@@ -3,14 +3,14 @@ $(function() {
         var self = this;
 		
 		self.settingsViewModel = parameters[0];
-		
-		self.enabled = ko.observable();
+        self.enabled = ko.observable();
+        self.autoclose = ko.observable();
 
 		self.onDataUpdaterPluginMessage = function(plugin, data) {
             if (plugin !== "IgnorePausedForUser") 
                 return;
 
-            if(self.settingsViewModel.settings.plugins.IgnorePausedForUser.enabled)
+            if(self.settingsViewModel.settings.plugins.IgnorePausedForUser.enabled())
             {
                 new PNotify({
                     title: '<p style="text-align:center">Paused for User</p>',
@@ -23,7 +23,7 @@ $(function() {
 		
 		self.onBeforeBinding = function() {
             self.enabled(self.settingsViewModel.settings.plugins.IgnorePausedForUser.enabled());
-            self.enabled(self.settingsViewModel.settings.plugins.IgnorePausedForUser.autoclose());
+            self.autoclose(self.settingsViewModel.settings.plugins.IgnorePausedForUser.autoclose());
         }
 		
 		self.onEventSettingsUpdated = function (payload) {            

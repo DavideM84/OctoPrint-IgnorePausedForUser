@@ -18,5 +18,8 @@ To auto-hide pop-up after a delay
 
 ### Changelog
 
-* Version 1.1.5 25/01/2020  
+* Version 1.1.6 29/01/2021  
+Improved the UI of settings page
+
+* Version 1.1.5 25/01/2021  
 First release

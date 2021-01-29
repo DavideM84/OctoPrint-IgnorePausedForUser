@@ -1,15 +1,25 @@
 <h4>IgnorePausedForUser Settings</h4>
+<br />
+<p>
+Octoprint plugin to ignore 'Paused for User' message from printer.  
+<br /><br />
+Occasionally when printing from Octoprint the printer stuck with the message ''Paused for user".
+I think it's a bug in the Marlin firmware, this plugin when receives the paused message from the printer, sends an M108 to resume printing immediately.<br />
+Obviously it should not be used if one or more filament changes are planned.
+</p>
 <form class="form-horizontal" id="settings_plugin_IgnorePausedForUser_form">
 	<div class="control-group">
 		<label class="control-label">{{ _('Enabled') }}</label>
 		<div class="controls">
 			<input type="checkbox" data-bind="checked: settingsViewModel.settings.plugins.IgnorePausedForUser.enabled">
         </div>
-    </div>	
+    </div>
 	<div class="control-group">
 		<label class="control-label">{{ _('Auto close') }}</label>
 		<div class="controls">
 			<input type="checkbox" data-bind="checked: settingsViewModel.settings.plugins.IgnorePausedForUser.autoclose">
         </div>
-    </div>	
+    </div>
 </form>
+<br>
+<p><small>IgnorePausedForUser v1.1.6</small></p>
