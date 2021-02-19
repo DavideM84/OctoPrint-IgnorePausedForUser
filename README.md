@@ -6,8 +6,8 @@ Octoprint plugin to ignore 'Paused for User' message from printer.
 
 <img src="imgs/pausedForUser.jpg" alt="Pause message" width="50%" />
 
-Occasionally when printing from Octoprint the printer stuck with the message "Paused for user".
-This plugin when receives that message from the printer, sends an M108 to resume printing immediately.
+Occasionally when printing from Octoprint the printer stuck with the message "Paused for user".  
+This plugin when receives that message from the printer, sends an M108 to resume printing immediately.  
 Obviously it should not be used if one or more filament changes are planned.  
 
 ![screenshot](imgs/screenshot.jpg)  
