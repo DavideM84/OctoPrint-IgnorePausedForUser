@@ -25,10 +25,10 @@ How many records in History
 
 ### Changelog
 
-* Version 1.2.0 19/02/2021  
+* Version 1.2.4 19/02/2021  
 Count the pauses skipped during a print  
+History data for next feature  
 Specific log file  
-History data  
 
 * Version 1.1.6 29/01/2021  
 Improved the UI of settings page
