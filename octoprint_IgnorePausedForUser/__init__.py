@@ -17,36 +17,36 @@ class IgnorePausedForUser(octoprint.plugin.StartupPlugin,
 	def checkPausedForUser(self, comm, line, *args, **kwargs):
 		if "echo:busy: paused for user" in line:
 			if self._settings.get(["enabled"]):
+				# send M108 to printer for continue
 				self._printer.commands("M108", force=True)
+				# increase counter
 				self.count += 1
+				# message to user
 				messageString = "Sent M108 to resume after 'Paused for user'\nPauses received during this print: <strong>%s</strong>" % self.count
 				self._plugin_manager.send_plugin_message(self._identifier, dict(type="popup", msg=messageString, hide=self._settings.get(["autoclose"])))
-				self.history.UpdateCount(self.count)
-				self.logger.debug("GCODE received: '%s'" % line)
+				# info
+				self.logger.info(f"GCODE received: '{line.strip()}'")
 				self.logger.info("Sent M108")
+				## update history
+				self.history.UpdateCount(self.count)
 		return line
 		
 	## printStarted
 	def printStarted(self, payload):
-		self.logger.debug("IgnorePausedForUser - PRINT STARTED")
+		self.logger.info("New print STARTED")
 		self.count = 0
 		self.history.StartJob(payload)		
 
 	## printStopped
 	def printStopped(self, payload, cancelled):
-		if cancelled:
-			self.logger.debug("IgnorePausedForUser - PRINT CANCELLED")
-		else:
-			self.logger.debug("IgnorePausedForUser - PRINT DONE")
+		str = "CANCELLED" if cancelled else "DONE"
+		self.logger.info(f"Print {str}")
 		self.history.StopJob(cancelled)
-
 
 	## on_after_startup
 	def on_after_startup(self):
 		# count
 		self.count = 0
-		# history
-		self.history = History(self._settings.get_plugin_data_folder())
 		# logger
 		logFile = self._settings.get_plugin_logfile_path()[1:]
 		formatter = logging.Formatter("%(asctime)s - %(levelname)s > %(message)s")
@@ -58,11 +58,14 @@ class IgnorePausedForUser(octoprint.plugin.StartupPlugin,
 		# startup
 		enabled = self._settings.get(["enabled"])
 		autoclose = self._settings.get(["autoclose"])
-		self.logger.debug("IgnorePausedForUser - STARTUP")
-		self.logger.info(f"Enabled: '{enabled}' Autoclose: '{autoclose}'")
+		historySize = self._settings.get(["historySize"])
+		# history
+		self.history = History(self.logger, self._settings.get_plugin_data_folder(), historySize)
+		self.logger.info(f"START UP\n\t\t\t\tEnabled: '{enabled}'\n\t\t\t\tAutoclose: '{autoclose}'\n\t\t\t\tHistorySize: '{historySize}'")
 
 	## on_event
 	def on_event(self, event, payload):
+		#self.logger.info(f"Event received: {event}")
 		if event == Events.PRINT_STARTED:
 			self.printStarted(payload)
 		elif event == Events.PRINT_DONE:
@@ -76,7 +79,7 @@ class IgnorePausedForUser(octoprint.plugin.StartupPlugin,
 		
 	##-- Settings hooks
 	def get_settings_defaults(self):
-		return dict(enabled=False, autoclose=True)	
+		return dict(enabled=False, autoclose=True, historySize=10)	
 	
 	##-- Template hooks
 	def get_template_configs(self):

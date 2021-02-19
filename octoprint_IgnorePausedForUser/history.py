@@ -1,61 +1,85 @@
-import os, json, uuid
+import os, json, uuid, logging
 from datetime import datetime
 
 class History:
     
-    def __init__(self, pluginDataFolder):
-        self.dataFolder = pluginDataFolder
+    def __init__(self, logger, pluginDataFolder, historySize = 10):
+        self.logger = logger
+        self.historyFile = f"{pluginDataFolder}/history.dat"
+        self.historySize = 10 if historySize < 1 or historySize > 1000 else historySize
         self.job = None
 
     def StartJob(self, payload):
+        id = str(uuid.uuid4())
+        self.logger.info(f"History > Start job id: '{id}'")
         self.job = {
-            "id": str(uuid.uuid4()),
-            "startedAt": datetime.now(),
-            "endedAt": None,
-            "user": payload.user,
-            "gcode": payload.name,
-            "size": payload.size,
+            "id": id,
+            "startedAt": datetime.now().isoformat(),
+            "endedAt": "",
+            "gcode": payload["name"],
+            "size": payload["size"],
+            "origin": payload["origin"],
+            "user": payload["user"],
             "state": "printing",
             "pauses": 0
         }
         self.addJob()
 
     def StopJob(self, cancelled):
-        self.job.endedAt = datetime.now()
-        if cancelled:
-            self.job.state = "cancelled"
-        else:
-            self.job.state = "done"
+        id = self.job["id"]
+        self.logger.info(f"History > Stop job id: '{id}'")
+        self.job["endedAt"] = datetime.now().isoformat()
+        self.job["state"] = "cancelled" if cancelled else "done"
         self.updateJob()
+        self.job = None
 
     def UpdateCount(self, count):
-        self.job.pauses = count
+        id = self.job["id"]
+        self.logger.info(f"History > Update job id: '{id}' count: {count}")
+        self.job["pauses"] = count
         self.updateJob()
 
+    def ClearHistory(self):
+        self.logger.info(f"History > Clear")
+        if os.path.exists(self.historyFile):
+            os.remove(self.historyFile)
+
+    #####
 
     def addJob(self):
-        data = self.readFromFile()
-        data.jobs.append(self.job)
-        self.writeToFile(data)
+        if self.job != None:
+            data = self.readHistory()
+            if (len(data["jobs"]) > self.historySize):
+                data["jobs"].clear()
+            data["jobs"].append(self.job)
+            self.writeHistory(data)
 
     def updateJob(self):
-        data = self.readFromFile()
-        for job in data["jobs"]:
-            if job["id"] == self.job["id"]:
-                job = self.job
-                self.writeToFile(data)
-                break
+        if self.job != None:
+            data = self.readHistory()
+            for job in data["jobs"]:
+                if job["id"] == self.job["id"]:
+                    self.copyObject(self.job, job)
+                    self.writeHistory(data)
+                    break
 
-    def readFromFile(self):
-        dataFile = self.dataFolder + "\\history.dat"
-        if os.path.exists(dataFile):
-            with open(dataFile, "r") as f:
-                data = json.load(f)
-        else:
-            data = { "jobs": [] }
+    def readHistory(self):
+        if not os.path.exists(self.historyFile):
+            self.writeHistory({ "jobs": [] })
+        with open(self.historyFile, "r") as f:
+            data = json.load(f)
         return data
 
-    def writeToFile(self, data):
-        dataFile = self.dataFolder + "\\history.dat"
-        with open(dataFile, "w") as f:
+    def writeHistory(self, data):
+        with open(self.historyFile, "w") as f:
             json.dump(data, f)
+
+    def copyObject(self, src, dest):
+        dest["endedAt"] = src["endedAt"]
+        dest["state"] = src["state"]
+        dest["pauses"] = src["pauses"]
+        #dest["startedAt"] = src["startedAt"]
+        #dest["gcode"] = src["gcode"]
+        #dest["size"] = src["size"]
+        #dest["origin"] = src["origin"]
+        #dest["user"] = src["user"]

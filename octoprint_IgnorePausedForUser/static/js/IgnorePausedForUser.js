@@ -5,6 +5,7 @@ $(function() {
 		self.settingsViewModel = parameters[0];
         self.enabled = ko.observable();
         self.autoclose = ko.observable();
+        self.historySize = ko.observable();
 
 		self.onDataUpdaterPluginMessage = function(plugin, data) {
             if (plugin !== "IgnorePausedForUser") 
@@ -24,11 +25,13 @@ $(function() {
 		self.onBeforeBinding = function() {
             self.enabled(self.settingsViewModel.settings.plugins.IgnorePausedForUser.enabled());
             self.autoclose(self.settingsViewModel.settings.plugins.IgnorePausedForUser.autoclose());
+            self.historySize(self.settingsViewModel.settings.plugins.IgnorePausedForUser.historySize());
         }
 		
 		self.onEventSettingsUpdated = function (payload) {            
             self.enabled = self.settingsViewModel.settings.plugins.IgnorePausedForUser.enabled();
             self.autoclose = self.settingsViewModel.settings.plugins.IgnorePausedForUser.autoclose();
+            self.historySize = self.settingsViewModel.settings.plugins.IgnorePausedForUser.historySize();
         }
     }
 
