@@ -18,7 +18,10 @@ Obviously it should not be used if one or more filament changes are planned.
 To enable/disable the M108 response  
 
 * Autoclose  
-To auto-hide pop-up after a delay
+To auto-hide pop-up after a delay  
+
+* HistorySize  
+How many records in History
 
 ### Changelog
 
