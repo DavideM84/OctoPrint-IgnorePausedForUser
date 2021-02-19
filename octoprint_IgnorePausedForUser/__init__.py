@@ -102,7 +102,7 @@ class IgnorePausedForUser(octoprint.plugin.StartupPlugin,
 				current=self._plugin_version,
 
 				# update method: pip
-				pip="https://github.com/DavideM84/OctoPrint-IgnorePausedForUser/archive/v{version}.zip"
+				pip="https://github.com/DavideM84/OctoPrint-IgnorePausedForUser/releases/download/v{version}/v{version}.zip"
 			)
 		)
 
