@@ -1,0 +1,33 @@
+<h4>IgnorePausedForUser Settings</h4>
+<br />
+<p style="text-align:center;">
+	<img src="https://github.com/DavideM84/OctoPrint-IgnorePausedForUser/raw/main/imgs/pausedZoom.jpg" style="width: 30%;" alt="Paused for user image" />
+</p>
+<p>
+Octoprint plugin to ignore 'Paused for User' message from printer.<br />
+Occasionally when printing from Octoprint the printer stuck with the message ''Paused for user".
+This plugin when receives that message from the printer, sends an M108 to resume printing immediately.
+Obviously it should not be used if one or more filament changes are planned.
+</p>
+<form class="form-horizontal" id="settings_plugin_IgnorePausedForUser_form" style="margin: 40px 0;">
+	<div class="control-group">
+		<label class="control-label">{{ _('Enabled:') }}</label>
+		<div class="controls">
+			<input type="checkbox" data-bind="checked: settingsViewModel.settings.plugins.IgnorePausedForUser.enabled">
+        </div>
+    </div>
+	<div class="control-group">
+		<label class="control-label">{{ _('Auto close:') }}</label>
+		<div class="controls">
+			<input type="checkbox" data-bind="checked: settingsViewModel.settings.plugins.IgnorePausedForUser.autoclose">
+        </div>
+    </div>
+	<div class="control-group">
+		<label class="control-label">{{ _('History size:') }}</label>
+		<div class="controls">
+			<input style="width: 50px;" type="number" min="1" max="9999" data-bind="value: settingsViewModel.settings.plugins.IgnorePausedForUser.historySize">
+        </div>
+    </div>
+</form>
+<br>
+<p><small>IgnorePausedForUser v1.2</small></p>
