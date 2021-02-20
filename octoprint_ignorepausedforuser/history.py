@@ -6,7 +6,11 @@ class History:
     def __init__(self, logger, pluginDataFolder, historySize = 10):
         self.logger = logger
         self.historyFile = f"{pluginDataFolder}/history.dat"
-        self.historySize = 10 if historySize < 1 or historySize > 1000 else historySize
+        if isinstance(historySize, str):
+            self.historySize = int(historySize) if historySize.isdigit() else 10
+        else:
+            self.historySize = historySize
+        self.historySize = 10 if self.historySize < 1 or self.historySize > 1000 else self.historySize
         self.job = None
 
     def StartJob(self, payload):
@@ -49,7 +53,8 @@ class History:
     def addJob(self):
         if self.job != None:
             data = self.readHistory()
-            if (len(data["jobs"]) > self.historySize):
+            currSize = len(data["jobs"])
+            if (currSize >= self.historySize):
                 data["jobs"].clear()
             data["jobs"].append(self.job)
             self.writeHistory(data)
