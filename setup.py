@@ -4,7 +4,7 @@
 ### Do not forget to adjust the following variables to your own plugin.
 
 # The plugin's identifier, has to be unique
-plugin_identifier = "IgnorePausedForUser"
+plugin_identifier = "ignorepausedforuser"
 
 # The plugin's python package, should be "octoprint_<plugin identifier>", has to be unique
 plugin_package = "octoprint_%s" % plugin_identifier
@@ -14,7 +14,7 @@ plugin_package = "octoprint_%s" % plugin_identifier
 plugin_name = "OctoPrint-%s" % plugin_identifier
 
 # The plugin's version. Can be overwritten within OctoPrint's internal data via __plugin_version__ in the plugin module
-plugin_version = "1.2.5"
+plugin_version = "1.2.6"
 
 # The plugin's description. Can be overwritten within OctoPrint's internal data via __plugin_description__ in the plugin
 # module

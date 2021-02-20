@@ -91,7 +91,7 @@ class IgnorePausedForUser(octoprint.plugin.StartupPlugin,
 		
 	def get_update_information(self):
 		return dict(
-			IgnorePausedForUser=dict(
+			ignorepausedforuser=dict(
 				displayName="IgnorePausedForUser",
 				displayVersion=self._plugin_version,
 
