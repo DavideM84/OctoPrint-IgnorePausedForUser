@@ -8,10 +8,10 @@ $(function() {
         self.historySize = ko.observable();
 
 		self.onDataUpdaterPluginMessage = function(plugin, data) {
-            if (plugin !== "IgnorePausedForUser") 
+            if (plugin !== "ignorepausedforuser") 
                 return;
 
-            if(self.settingsViewModel.settings.plugins.IgnorePausedForUser.enabled())
+            if(self.settingsViewModel.settings.plugins.ignorepausedforuser.enabled())
             {
                 new PNotify({
                     title: '<p style="text-align:center">Paused for User</p>',
@@ -23,15 +23,15 @@ $(function() {
 		}
 		
 		self.onBeforeBinding = function() {
-            self.enabled(self.settingsViewModel.settings.plugins.IgnorePausedForUser.enabled());
-            self.autoclose(self.settingsViewModel.settings.plugins.IgnorePausedForUser.autoclose());
-            self.historySize(self.settingsViewModel.settings.plugins.IgnorePausedForUser.historySize());
+            self.enabled(self.settingsViewModel.settings.plugins.ignorepausedforuser.enabled());
+            self.autoclose(self.settingsViewModel.settings.plugins.ignorepausedforuser.autoclose());
+            self.historySize(self.settingsViewModel.settings.plugins.ignorepausedforuser.historySize());
         }
 		
 		self.onEventSettingsUpdated = function (payload) {            
-            self.enabled = self.settingsViewModel.settings.plugins.IgnorePausedForUser.enabled();
-            self.autoclose = self.settingsViewModel.settings.plugins.IgnorePausedForUser.autoclose();
-            self.historySize = self.settingsViewModel.settings.plugins.IgnorePausedForUser.historySize();
+            self.enabled = self.settingsViewModel.settings.plugins.ignorepausedforuser.enabled();
+            self.autoclose = self.settingsViewModel.settings.plugins.ignorepausedforuser.autoclose();
+            self.historySize = self.settingsViewModel.settings.plugins.ignorepausedforuser.historySize();
         }
     }
 

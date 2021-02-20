@@ -1,4 +1,5 @@
-<h4>IgnorePausedForUser Settings</h4>
+<h4>Ignore 'Paused for user'</h4>
+<h5>Settings</h5>
 <br />
 <p style="text-align:center;">
 	<img src="https://github.com/DavideM84/OctoPrint-IgnorePausedForUser/raw/main/imgs/pausedZoom.jpg" style="width: 30%;" alt="Paused for user image" />
@@ -13,19 +14,19 @@ Obviously it should not be used if one or more filament changes are planned.
 	<div class="control-group">
 		<label class="control-label">{{ _('Enabled:') }}</label>
 		<div class="controls">
-			<input type="checkbox" data-bind="checked: settingsViewModel.settings.plugins.IgnorePausedForUser.enabled">
+			<input type="checkbox" data-bind="checked: settingsViewModel.settings.plugins.ignorepausedforuser.enabled">
         </div>
     </div>
 	<div class="control-group">
 		<label class="control-label">{{ _('Auto close:') }}</label>
 		<div class="controls">
-			<input type="checkbox" data-bind="checked: settingsViewModel.settings.plugins.IgnorePausedForUser.autoclose">
+			<input type="checkbox" data-bind="checked: settingsViewModel.settings.plugins.ignorepausedforuser.autoclose">
         </div>
     </div>
 	<div class="control-group">
 		<label class="control-label">{{ _('History size:') }}</label>
 		<div class="controls">
-			<input style="width: 50px;" type="number" min="1" max="9999" data-bind="value: settingsViewModel.settings.plugins.IgnorePausedForUser.historySize">
+			<input style="width: 50px;" type="number" min="1" max="9999" data-bind="value: settingsViewModel.settings.plugins.ignorepausedforuser.historySize">
         </div>
     </div>
 </form>
