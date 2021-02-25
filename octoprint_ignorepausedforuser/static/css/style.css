@@ -1,0 +1,18 @@
+
+#settings_plugin_ignorepausedforuser_form .control-label
+{ 
+    text-align: left!important; 
+    width: 100px!important;
+}
+#settings_plugin_ignorepausedforuser_form .controls
+{ 
+    margin-left: 100px!important;
+}
+.history_table
+{
+    width: 100%;
+}
+.history_table td 
+{ 
+  text-align: center;  
+}

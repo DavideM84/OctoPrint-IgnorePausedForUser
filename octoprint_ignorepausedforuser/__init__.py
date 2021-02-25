@@ -6,17 +6,19 @@ import re
 import logging, logging.handlers
 import os
 from .history import History
+from flask import jsonify, Flask
 
 class IgnorePausedForUser(octoprint.plugin.StartupPlugin,
 						  octoprint.plugin.EventHandlerPlugin,
 						  octoprint.plugin.AssetPlugin,						  
 						  octoprint.plugin.TemplatePlugin,
-                		  octoprint.plugin.SettingsPlugin):
+                		  octoprint.plugin.SettingsPlugin,
+						  octoprint.plugin.BlueprintPlugin):
 
 	## checkPausedForUser		
 	def checkPausedForUser(self, comm, line, *args, **kwargs):
-		if "echo:busy: paused for user" in line:
-			if self._settings.get(["enabled"]):
+		if self.isEnabled():
+			if "echo:busy: paused for user" in line:
 				# send M108 to printer for continue
 				self._printer.commands("M108", force=True)
 				# increase counter
@@ -26,7 +28,7 @@ class IgnorePausedForUser(octoprint.plugin.StartupPlugin,
 				self._plugin_manager.send_plugin_message(self._identifier, dict(type="popup", msg=messageString, hide=self._settings.get(["autoclose"])))
 				# info
 				self.logger.info(f"GCODE received: '{line.strip()}'")
-				self.logger.info("Sent M108")
+				self.logger.info("GCODE Sent M108")
 				## update history
 				self.history.UpdateCount(self.count)
 		return line
@@ -65,21 +67,31 @@ class IgnorePausedForUser(octoprint.plugin.StartupPlugin,
 
 	## on_event
 	def on_event(self, event, payload):
-		#self.logger.info(f"Event received: {event}")
-		if event == Events.PRINT_STARTED:
-			self.printStarted(payload)
-		elif event == Events.PRINT_DONE:
-			self.printStopped(payload, False)
-		elif event == Events.PRINT_FAILED:
-			self.printStopped(payload, True)
+		if self.isEnabled():
+			if event == Events.PRINT_STARTED:
+				self.printStarted(payload)
+			elif event == Events.PRINT_DONE:
+				self.printStopped(payload, False)
+			elif event == Events.PRINT_FAILED:
+				self.printStopped(payload, True)
+
+	## isEnabled
+	def isEnabled(self):
+		return self._settings.get(["enabled"])
+
+	@octoprint.plugin.BlueprintPlugin.route("/history", methods=["GET"])
+	def getHistory(self):
+		data = self.history.GetAll()
+		return jsonify(data)
 
 	##-- AssetPlugin hooks
 	def get_assets(self):
-		return dict(js=["js/IgnorePausedForUser.js"])
+		return dict(js=["js/IgnorePausedForUser.js"],
+				    css=["css/style.css"])
 		
 	##-- Settings hooks
 	def get_settings_defaults(self):
-		return dict(enabled=False, autoclose=True, historySize=10)	
+		return dict(enabled=False, autoclose=True, historySize=3)	
 	
 	##-- Template hooks
 	def get_template_configs(self):

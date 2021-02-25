@@ -1,0 +1,27 @@
+<script type="text/html" id="ignorepaused_history">
+    <div class="panel-body">
+       <div id="ignorepaused_history_data">
+        <span data-bind="visible: historyData().jobs.length == 0">No records</span>
+        <div data-bind="visible: historyData().jobs.length > 0">
+            <table class="history_table">
+                <thead>
+                    <th>Owner</th>
+                    <th>Filename</th>
+                    <th>Started at</th>
+                    <th>Ended at</th>
+                    <th>Pauses count</th>
+                </thead>
+                <tbody data-bind="foreach: historyData().jobs">
+                    <tr>
+                        <td data-bind="text: user"></td>
+                        <td data-bind="text: gcode"></td>
+                        <td data-bind="text: startedAt != '' ? new Date(startedAt).toLocaleString() : ''"></td>
+                        <td data-bind="text: endedAt != ''   ? new Date(endedAt).toLocaleString()   : ''"></td>
+                        <td data-bind="text: pauses"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+       </div>
+    </div>
+</script>

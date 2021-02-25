@@ -1,34 +1,56 @@
-<h4>Ignore 'Paused for user'</h4>
-<h5>Settings</h5>
-<br />
-<p style="text-align:center;">
-	<img src="https://github.com/DavideM84/OctoPrint-IgnorePausedForUser/raw/main/imgs/pausedZoom.jpg" style="width: 30%;" alt="Paused for user image" />
-</p>
-<p>
-Octoprint plugin to ignore 'Paused for User' message from printer.<br />
-Occasionally when printing from Octoprint the printer stuck with the message ''Paused for user".
-This plugin when receives that message from the printer, sends an M108 to resume printing immediately.
-Obviously it should not be used if one or more filament changes are planned.
-</p>
-<form class="form-horizontal" id="settings_plugin_IgnorePausedForUser_form" style="margin: 40px 0;">
-	<div class="control-group">
-		<label class="control-label">{{ _('Enabled:') }}</label>
-		<div class="controls">
-			<input type="checkbox" data-bind="checked: settingsViewModel.settings.plugins.ignorepausedforuser.enabled">
+<div class="ignorepausedforuser_plugin">
+    <div id="ignorepaused_settings_container">
+        <div class="row-fluid" id="ignore_paused_title">
+            <div class="span9">
+                <h3>Ignore 'Paused for user'</h3>
+            </div>
         </div>
-    </div>
-	<div class="control-group">
-		<label class="control-label">{{ _('Auto close:') }}</label>
-		<div class="controls">
-			<input type="checkbox" data-bind="checked: settingsViewModel.settings.plugins.ignorepausedforuser.autoclose">
+		<div class="row-fluid">
+            <div class="span12">
+                <div id="ignorepaused_body">
+					<p>Octoprint plugin to ignore 'Paused for User' message from printer.</p>
+                    <p style="text-align:center;"><img src="plugin/ignorepausedforuser/static/imgs/pausedZoom.jpg" style="width: 30%;" alt="Paused for user image" /></p>					
+                </div>
+            </div>
         </div>
-    </div>
-	<div class="control-group">
-		<label class="control-label">{{ _('History size:') }}</label>
-		<div class="controls">
-			<input style="width: 50px;" type="number" min="1" max="9999" data-bind="value: settingsViewModel.settings.plugins.ignorepausedforuser.historySize">
+		<div class="row-fluid">
+            <div class="span12">
+                <div id="ignorepaused_settings_nav">
+                    <ul class="nav nav-pills">
+                        <li class="dropdown pull-right tabdrop hide">
+                            <a class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="icon-align-justify"></i>
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu"></ul>
+                        </li>
+                        <li class="active">
+                            <a href="#ignorepaused_settings_tab" data-toggle="tab">Settings</a>
+                        </li>
+                        <li>
+                            <a href="#ignorepaused_history_tab" data-bind="click: function() {loadHistory(historyData);}" data-toggle="tab">History</a>
+                        </li>                       
+                    </ul>
+                </div>
+                <div class="tab-content">
+                    <div id="ignorepaused_settings_tab" class="panel panel-default tab-pane active">
+                        <div data-bind="template: 'ignorepaused_settings'"></div>
+                    </div>
+                    <div id="ignorepaused_history_tab" class="panel panel-default tab-pane">
+                        <div data-bind="template: 'ignorepaused_history'"></div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</form>
-<br>
-<p><small>IgnorePausedForUser v1.2</small></p>
+		<div class="row-fluid">
+            <div class="span12">
+                <div id="ignorepaused_footer">
+                    <small>IgnorePausedForUser v1.2</small>
+                </div>
+            </div>
+        </div>
+	</div>
+</div>
+
+{% include "ignorepaused_settings.jinja2" %}
+{% include "ignorepaused_history.jinja2" %}

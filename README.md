@@ -25,6 +25,11 @@ How many records in History
 
 ### Changelog
 
+* Version 1.2.7 25/02/2021  
+History data in settings page (default history size: 3 max: 10)  
+Better IO perf in history operations  
+Minor changes  
+
 * Version 1.2.6 20/02/2021  
 Count the pauses skipped during a print  
 History data for next feature  

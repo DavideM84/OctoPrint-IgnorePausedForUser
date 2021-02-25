@@ -10,8 +10,15 @@ class History:
             self.historySize = int(historySize) if historySize.isdigit() else 10
         else:
             self.historySize = historySize
-        self.historySize = 10 if self.historySize < 1 or self.historySize > 1000 else self.historySize
+        self.historySize = 3 if self.historySize < 1 or self.historySize > 10 else self.historySize
         self.job = None
+
+    def GetAll(self):
+        data = { "jobs": [] }
+        if os.path.exists(self.historyFile):
+            with open(self.historyFile, "r") as f:
+                data = json.load(f)
+        return data
 
     def StartJob(self, payload):
         id = str(uuid.uuid4())
@@ -30,18 +37,20 @@ class History:
         self.addJob()
 
     def StopJob(self, cancelled):
-        id = self.job["id"]
-        self.logger.info(f"History > Stop job id: '{id}'")
-        self.job["endedAt"] = datetime.now().isoformat()
-        self.job["state"] = "cancelled" if cancelled else "done"
-        self.updateJob()
-        self.job = None
+        if self.job is not None:
+            id = self.job["id"]
+            self.logger.info(f"History > Stop job id: '{id}'")
+            self.job["endedAt"] = datetime.now().isoformat()
+            self.job["state"] = "cancelled" if cancelled else "done"
+            self.updateJob()
+            self.job = None
 
     def UpdateCount(self, count):
-        id = self.job["id"]
-        self.logger.info(f"History > Update job id: '{id}' count: {count}")
-        self.job["pauses"] = count
-        self.updateJob()
+        if self.job is not None:
+            id = self.job["id"]
+            self.logger.info(f"History > Update job id: '{id}' count: {count}")
+            self.job["pauses"] = count
+            self.updateJob()
 
     def ClearHistory(self):
         self.logger.info(f"History > Clear")
@@ -51,40 +60,32 @@ class History:
     #####
 
     def addJob(self):
-        if self.job != None:
-            data = self.readHistory()
-            currSize = len(data["jobs"])
-            if (currSize >= self.historySize):
-                data["jobs"].clear()
-            data["jobs"].append(self.job)
-            self.writeHistory(data)
+        if self.job is not None:
+            if not os.path.exists(self.historyFile):
+                with open(self.historyFile, "w") as f:    
+                    json.dump({ "jobs": [] }, f)    
+
+            with open(self.historyFile, "r+") as f:
+                data = json.load(f)
+                currSize = len(data["jobs"])
+                if (currSize >= self.historySize):
+                    data["jobs"].clear()
+                data["jobs"].append(self.job)
+                f.seek(0)
+                json.dump(data, f)
+                f.truncate()
 
     def updateJob(self):
-        if self.job != None:
-            data = self.readHistory()
-            for job in data["jobs"]:
-                if job["id"] == self.job["id"]:
-                    self.copyObject(self.job, job)
-                    self.writeHistory(data)
-                    break
-
-    def readHistory(self):
-        if not os.path.exists(self.historyFile):
-            self.writeHistory({ "jobs": [] })
-        with open(self.historyFile, "r") as f:
-            data = json.load(f)
-        return data
-
-    def writeHistory(self, data):
-        with open(self.historyFile, "w") as f:
-            json.dump(data, f)
-
-    def copyObject(self, src, dest):
-        dest["endedAt"] = src["endedAt"]
-        dest["state"] = src["state"]
-        dest["pauses"] = src["pauses"]
-        #dest["startedAt"] = src["startedAt"]
-        #dest["gcode"] = src["gcode"]
-        #dest["size"] = src["size"]
-        #dest["origin"] = src["origin"]
-        #dest["user"] = src["user"]
+        if self.job is not None:
+            with open(self.historyFile, "r+") as f:
+                data = json.load(f)
+                for job in data["jobs"]:
+                    if job["id"] == self.job["id"]:
+                        job["endedAt"] = self.job["endedAt"]
+                        job["state"] = self.job["state"]
+                        job["pauses"] = self.job["pauses"]
+                        f.seek(0)
+                        json.dump(data, f)
+                        f.truncate()
+                        break
+ 
