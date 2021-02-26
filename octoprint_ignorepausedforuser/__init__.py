@@ -24,10 +24,10 @@ class IgnorePausedForUser(octoprint.plugin.StartupPlugin,
 				# increase counter
 				self.count += 1
 				# message to user
-				messageString = "Sent M108 to resume after 'Paused for user'\nPauses received during this print: <strong>%s</strong>" % self.count
+				messageString = "Sent M108 to resume after 'Paused for user'\nPauses received during this print: <strong>{}</strong>".format(self.count)
 				self._plugin_manager.send_plugin_message(self._identifier, dict(type="popup", msg=messageString, hide=self._settings.get(["autoclose"])))
 				# info
-				self.logger.info(f"GCODE received: '{line.strip()}'")
+				self.logger.info("GCODE received: '{}'".format(line.strip()))
 				self.logger.info("GCODE Sent M108")
 				## update history
 				self.history.UpdateCount(self.count)
@@ -42,7 +42,7 @@ class IgnorePausedForUser(octoprint.plugin.StartupPlugin,
 	## printStopped
 	def printStopped(self, payload, cancelled):
 		str = "CANCELLED" if cancelled else "DONE"
-		self.logger.info(f"Print {str}")
+		self.logger.info("Print {}".format(str))
 		self.history.StopJob(cancelled)
 
 	## on_after_startup
@@ -63,7 +63,7 @@ class IgnorePausedForUser(octoprint.plugin.StartupPlugin,
 		historySize = self._settings.get(["historySize"])
 		# history
 		self.history = History(self.logger, self._settings.get_plugin_data_folder(), historySize)
-		self.logger.info(f"START UP\n\t\t\t\tEnabled: '{enabled}'\n\t\t\t\tAutoclose: '{autoclose}'\n\t\t\t\tHistorySize: '{historySize}'")
+		self.logger.info("START UP\n\t\t\t\tEnabled: '{}'\n\t\t\t\tAutoclose: '{}'\n\t\t\t\tHistorySize: '{}'".format(enabled,autoclose,historySize))
 
 	## on_event
 	def on_event(self, event, payload):

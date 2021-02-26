@@ -5,7 +5,7 @@ class History:
     
     def __init__(self, logger, pluginDataFolder, historySize = 10):
         self.logger = logger
-        self.historyFile = f"{pluginDataFolder}/history.dat"
+        self.historyFile = "{}/history.dat".format(pluginDataFolder)
         if isinstance(historySize, str):
             self.historySize = int(historySize) if historySize.isdigit() else 10
         else:
@@ -22,7 +22,7 @@ class History:
 
     def StartJob(self, payload):
         id = str(uuid.uuid4())
-        self.logger.info(f"History > Start job id: '{id}'")
+        self.logger.info("History > Start job id: '{}'".format(id))
         self.job = {
             "id": id,
             "startedAt": datetime.now().isoformat(),
@@ -39,7 +39,7 @@ class History:
     def StopJob(self, cancelled):
         if self.job is not None:
             id = self.job["id"]
-            self.logger.info(f"History > Stop job id: '{id}'")
+            self.logger.info("History > Stop job id: '{}'".format(id))
             self.job["endedAt"] = datetime.now().isoformat()
             self.job["state"] = "cancelled" if cancelled else "done"
             self.updateJob()
@@ -48,12 +48,12 @@ class History:
     def UpdateCount(self, count):
         if self.job is not None:
             id = self.job["id"]
-            self.logger.info(f"History > Update job id: '{id}' count: {count}")
+            self.logger.info("History > Update job id: '{}' count: {}".format(id,count))
             self.job["pauses"] = count
             self.updateJob()
 
     def ClearHistory(self):
-        self.logger.info(f"History > Clear")
+        self.logger.info("History > Clear")
         if os.path.exists(self.historyFile):
             os.remove(self.historyFile)
 
