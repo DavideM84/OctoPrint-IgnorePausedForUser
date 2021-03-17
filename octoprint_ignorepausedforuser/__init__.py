@@ -53,6 +53,7 @@ class IgnorePausedForUser(octoprint.plugin.StartupPlugin,
 		logFile = self._settings.get_plugin_logfile_path()[1:]
 		formatter = logging.Formatter("%(asctime)s - %(levelname)s > %(message)s")
 		self.logger = logging.getLogger("IgnorePausedForUserPlugin")
+		self.logger.propagate = False
 		self.logger.setLevel(logging.DEBUG)
 		handler = logging.handlers.RotatingFileHandler(logFile, maxBytes=1000000, backupCount=3)
 		handler.setFormatter(formatter)

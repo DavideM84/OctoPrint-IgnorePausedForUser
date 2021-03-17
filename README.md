@@ -25,6 +25,10 @@ How many records in History
 
 ### Changelog
 
+* Version 1.2.8 17/03/2021  
+Fixed phyton 2.7 compatibility  
+Minor fix  
+
 * Version 1.2.7 25/02/2021  
 New markup for settings page  
 History data in settings page (default history size: 3 max: 10)  

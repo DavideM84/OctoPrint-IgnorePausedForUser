@@ -57,12 +57,6 @@ $(function() {
             self.autoclose(self.settingsViewModel.settings.plugins.ignorepausedforuser.autoclose());
             self.historySize(self.settingsViewModel.settings.plugins.ignorepausedforuser.historySize());
         };
-		
-		self.onEventSettingsUpdated = function (payload) {            
-            self.enabled(self.settingsViewModel.settings.plugins.ignorepausedforuser.enabled());
-            self.autoclose(self.settingsViewModel.settings.plugins.ignorepausedforuser.autoclose());
-            self.historySize(self.settingsViewModel.settings.plugins.ignorepausedforuser.historySize());
-        };
     }
 
     // This is how our plugin registers itself with the application, by adding some configuration
