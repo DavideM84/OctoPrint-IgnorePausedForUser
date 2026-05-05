@@ -1,4 +1,7 @@
-import os, json, uuid, logging
+import os
+import json
+import uuid
+import logging
 from datetime import datetime
 
 class History:

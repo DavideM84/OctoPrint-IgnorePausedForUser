@@ -3,7 +3,8 @@
 import octoprint.plugin
 from octoprint.events import eventManager, Events
 import re
-import logging, logging.handlers
+import logging
+import logging.handlers
 import os
 from .history import History
 from flask import jsonify, Flask
