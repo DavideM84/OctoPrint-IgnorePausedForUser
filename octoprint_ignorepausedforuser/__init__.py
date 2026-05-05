@@ -100,6 +100,9 @@ class IgnorePausedForUser(
     def isEnabled(self):
         return self._settings.get(["enabled"])
 
+    def is_blueprint_csrf_protected(self):
+        return True
+
     @octoprint.plugin.BlueprintPlugin.route("/history", methods=["GET"])
     def getHistory(self):
         data = self.history.GetAll()
