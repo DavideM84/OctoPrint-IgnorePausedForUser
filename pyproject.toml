@@ -1,0 +1,42 @@
+[build-system]
+requires = [
+    "setuptools>=68",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "OctoPrint-ignorepausedforuser"
+version = "1.2.8"
+description = "Simple plugin that sends M108 after receiving 'Paused for user' from the printer to resume printing immediately"
+authors = [
+    { name = "Davide Mencarelli", email = "d.mencarelli@outlook.com" },
+]
+requires-python = ">=2.7,<4"
+dependencies = []
+dynamic = [
+    "license",
+]
+
+[project.entry-points."octoprint.plugin"]
+ignorepausedforuser = "octoprint_ignorepausedforuser"
+
+[project.urls]
+Homepage = "https://github.com/DavideM84/OctoPrint-IgnorePausedForUser"
+
+[project.optional-dependencies]
+develop = [
+    "go-task-bin",
+]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+include = [
+    "octoprint_ignorepausedforuser",
+    "octoprint_ignorepausedforuser.*",
+]
