@@ -77,9 +77,7 @@ class IgnorePausedForUser(
         autoclose = self._settings.get(["autoclose"])
         historySize = self._settings.get(["historySize"])
         # history
-        self.history = History(
-            self.logger, self._settings.get_plugin_data_folder(), historySize
-        )
+        self.history = History(self.logger, self.get_plugin_data_folder(), historySize)
         self.logger.info(
             "START UP\n\t\t\t\tEnabled: '{}'\n\t\t\t\tAutoclose: '{}'\n\t\t\t\tHistorySize: '{}'".format(
                 enabled, autoclose, historySize
