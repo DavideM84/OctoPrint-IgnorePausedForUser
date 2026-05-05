@@ -1,13 +1,11 @@
 # coding=utf-8
 
 import octoprint.plugin
-from octoprint.events import eventManager, Events
-import re
+from octoprint.events import Events
 import logging
 import logging.handlers
-import os
 from .history import History
-from flask import jsonify, Flask
+from flask import jsonify
 
 class IgnorePausedForUser(octoprint.plugin.StartupPlugin,
 						  octoprint.plugin.EventHandlerPlugin,
