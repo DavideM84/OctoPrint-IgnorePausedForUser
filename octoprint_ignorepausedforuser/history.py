@@ -1,20 +1,24 @@
-import os, json, uuid, logging
+import json
+import os
+import uuid
 from datetime import datetime
 
+
 class History:
-    
-    def __init__(self, logger, pluginDataFolder, historySize = 10):
+    def __init__(self, logger, pluginDataFolder, historySize=10):
         self.logger = logger
         self.historyFile = "{}/history.dat".format(pluginDataFolder)
         if isinstance(historySize, str):
             self.historySize = int(historySize) if historySize.isdigit() else 10
         else:
             self.historySize = historySize
-        self.historySize = 3 if self.historySize < 1 or self.historySize > 10 else self.historySize
+        self.historySize = (
+            3 if self.historySize < 1 or self.historySize > 10 else self.historySize
+        )
         self.job = None
 
     def GetAll(self):
-        data = { "jobs": [] }
+        data = {"jobs": []}
         if os.path.exists(self.historyFile):
             with open(self.historyFile, "r") as f:
                 data = json.load(f)
@@ -32,7 +36,7 @@ class History:
             "origin": payload["origin"],
             "user": payload["user"],
             "state": "printing",
-            "pauses": 0
+            "pauses": 0,
         }
         self.addJob()
 
@@ -48,7 +52,9 @@ class History:
     def UpdateCount(self, count):
         if self.job is not None:
             id = self.job["id"]
-            self.logger.info("History > Update job id: '{}' count: {}".format(id,count))
+            self.logger.info(
+                "History > Update job id: '{}' count: {}".format(id, count)
+            )
             self.job["pauses"] = count
             self.updateJob()
 
@@ -62,13 +68,13 @@ class History:
     def addJob(self):
         if self.job is not None:
             if not os.path.exists(self.historyFile):
-                with open(self.historyFile, "w") as f:    
-                    json.dump({ "jobs": [] }, f)    
+                with open(self.historyFile, "w") as f:
+                    json.dump({"jobs": []}, f)
 
             with open(self.historyFile, "r+") as f:
                 data = json.load(f)
                 currSize = len(data["jobs"])
-                if (currSize >= self.historySize):
+                if currSize >= self.historySize:
                     data["jobs"].clear()
                 data["jobs"].append(self.job)
                 f.seek(0)
@@ -88,4 +94,3 @@ class History:
                         json.dump(data, f)
                         f.truncate()
                         break
- 
